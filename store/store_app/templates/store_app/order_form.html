@@ -1,0 +1,25 @@
+{% extends "./base.html" %}
+
+{% block title %}Order{% endblock %}
+
+{% block pageheader %}
+    {% if object.order_num %}
+         <h1>{{ object.order_num }}</h1>
+    {% else %}
+         <h1>New order</h1>
+    {% endif %}
+{% endblock %}
+{% block content %}
+    <div class="block-header">
+        <h3>Enter or change all required data:</h3>
+    </div>
+    <div class="content">
+        <form method="post" enctype="multipart/form-data">{% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Save">
+        </form>
+    </div>
+    <div class="block-header">
+        <a href="{% url 'order_list' %}"> << To the list of orders >> </a>
+    </div>
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends "./base.html" %}
+
+{% block title %}Delete Book{% endblock %}
+
+{% block pageheader %}
+    <h1>Are you sure you want to delete book "{{ object.header }}"?</h1>
+    <form method="post">{% csrf_token %}
+        <input type="submit" value="Confirm">
+    </form>
+{% endblock %}

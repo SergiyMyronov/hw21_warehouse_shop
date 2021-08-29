@@ -1,0 +1,32 @@
+{% extends "./base.html" %}
+
+{% block title %}Order Detail{% endblock %}
+
+{% block pageheader %}
+    <h1>Order#: {{ object.order_num }} Date: {{ object.order_date }} Status: {{ object.status }}</h1>
+{% endblock %}
+{% block content %}
+    <div class="block-header">
+        <h3>Order details:</h3>
+    </div>
+    <div class="content">
+        <ul>
+        {% for ln in order_lines %}
+            <li>
+                <p>ISBN: {{ ln.ISBN }}</p>
+                <p>Authors: {{ ln.author_name }}</p>
+                <p>Title: {{ ln.title }}</p>
+                <p>Price: {{ ln.price }}</p>
+                <p>Quantity: {{ ln.quantity }}</p>
+            </li>
+            <div class="container-fluid">
+                <div class="row">
+                    <hr style="height:2px;background-color:black;border:none;" />
+                </div>
+            </div>
+        {% empty %}
+            <li>No lines yet.</li>
+        {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends "store_app/base.html" %}
+{% load static %}
+
+{% block title %}Orders{% endblock %}
+
+{% block pageheader %}
+    <h1>User orders</h1>
+{% endblock %}
+{% block navcol1 %}
+    {% if user.is_authenticated %}
+         <a href="{% url 'book_list' %}" role="button" class="btn btn-default" >To book list</a>
+    {% else %}
+         <a href="{% url 'login' %}" role="button" class="btn btn-default" >Login</a>
+    {% endif %}
+{% endblock %}
+{% block content %}
+    <div class="content">
+        <table>
+            {% for ord in object_list %}
+                <tr>
+                    {% if ord.status == 'cart'%}
+                        <td><a href="{{ ord.id }}"> Order#: {{ ord.order_num }} Date: {{ ord.order_date }} </a> </td>
+                    {% else %}
+                        <td><b> Order#: {{ ord.order_num }} Date: {{ ord.order_date }} </b> </td>
+                    {% endif %}
+                    <td><b>Store #:</b> {{ ord.store_num }}</td>
+                    <td><b>Store name:</b> {{ ord.store_name }}</td>
+                    <td><b>Customer name:</b> {{ ord.customer_name }}</td>
+                    <td><b>Customer mail:</b> {{ ord.customer_mail }}</td>
+                    <td><b>Status:</b> {{ ord.status }}</td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="divider"><hr/></td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td><b>No orders yet.</b></td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+{% endblock %}
