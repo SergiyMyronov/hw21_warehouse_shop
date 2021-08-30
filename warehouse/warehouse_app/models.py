@@ -48,7 +48,7 @@ class Order(models.Model):
         return f'{self.order_date.strftime("%Y-%m-%d")} {str(self.order_num)}'
 
 
-class OrderDetail(models.Model):
+class OrderLine(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     ISBN = models.CharField(max_length=13)
     author_name = models.CharField(max_length=300)

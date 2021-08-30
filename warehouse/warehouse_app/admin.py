@@ -1,10 +1,10 @@
 from django.contrib import admin
 
-from warehouse_app.models import Book, Order, OrderDetail
+from warehouse_app.models import Book, Order, OrderLine
 
 
-class OrderDetailInline(admin.TabularInline):
-    model = OrderDetail
+class OrderLineInline(admin.TabularInline):
+    model = OrderLine
     extra = 2
 
 
@@ -30,10 +30,10 @@ class OrderAdmin(admin.ModelAdmin):
         'status',
     ]
     search_fields = ['order_num']
-    inlines = [OrderDetailInline]
+    inlines = [OrderLineInline]
 
 
-class OrderDetailAdmin(admin.ModelAdmin):
+class OrderLineAdmin(admin.ModelAdmin):
     fieldsets = [
         (None, {'fields': [
             'order',
@@ -88,4 +88,4 @@ class BookAdmin(admin.ModelAdmin):
 
 admin.site.register(Book, BookAdmin)
 admin.site.register(Order, OrderAdmin)
-admin.site.register(OrderDetail, OrderDetailAdmin)
+admin.site.register(OrderLine, OrderLineAdmin)

@@ -49,7 +49,7 @@ class OrderListView(LoginRequiredMixin, ListView):
         'status',
     ]
     success_url = reverse_lazy('order_list')
-    paginate_by = 3
+    paginate_by = 12
 
     def get_queryset(self):
         qs = super().get_queryset()
