@@ -2,7 +2,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
@@ -10,6 +10,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic.list import ListView
 
+from store_app.forms import OrderForm
 from store_app.models import Book, Order, OrderLine
 
 
@@ -31,9 +32,22 @@ class BookListView(ListView):
     ]
     paginate_by = 15
 
-#    def get_queryset(self):
-#        qs = super().get_queryset().annotate(comm_cnt=Count('comment'))
-#        return qs.filter(is_active=True)
+
+def order_cart(request):
+    cart, created = Order.objects.get_or_create(
+        customer_name=request.user.username,
+        customer_mail=request.user.email,
+        status='cart')
+    order_lines = OrderLine.objects.filter(order=cart)
+    if request.method == 'POST':
+        form = OrderForm(request.POST, instance=cart)
+        if form.is_valid():
+            form.save()
+            return redirect('book_list')
+    else:
+        form = OrderForm(instance=cart)
+
+    return render(request, 'store_app/order_cart.html', {'form': form, 'order_id': cart.id, 'order_lines': order_lines})
 
 
 class OrderListView(LoginRequiredMixin, ListView):
@@ -53,7 +67,7 @@ class OrderListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         qs = super().get_queryset()
-        return qs.filter(customer_name=self.request.user.username)
+        return qs.filter(customer_name=self.request.user.username).exclude(status='cart')
 
 
 class OrderDetailView(LoginRequiredMixin, DetailView):
@@ -117,56 +131,40 @@ class OrderDeleteView(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy('order_list')
 
 
-class OrderLineListView(ListView):
-    model = OrderLine
-    fields = [
-        'book',
-        'ISBN',
-        'author_name',
-        'title',
-        'price',
-        'quantity',
-    ]
-    paginate_by = 8
-
-    def get_queryset(self):
-        qs = super().get_queryset()
-        order_id = self.request.GET.get('order')
-        return qs.filter(order=order_id)
-
-    def get_context_data(self, **kwargs):
-        context = super(OrderLineListView, self).get_context_data(**kwargs)
-        ord_num = self.request.GET.get('order_num')
-        back = self.request.META.get('HTTP_REFERER')
-        context['ord_num'] = ord_num
-        context['back'] = back
-        return context
-
-
 class OrderLineCreateView(CreateView):
     model = OrderLine
     fields = [
         'book',
-        'ISBN',
-        'author_name',
-        'title',
-        'price',
         'quantity',
     ]
-    success_url = reverse_lazy('order_list')
-
-    def get_context_data(self, **kwargs):
-        context = super(OrderLineCreateView, self).get_context_data(**kwargs)
-        ord_num = self.request.GET.get('order_num')
-        context['ord_num'] = ord_num
-        return context
+    success_url = reverse_lazy('order_cart')
 
     def form_valid(self, form):
         ord_line = form.save(commit=False)
-        ord_line.order_id = self.request.GET.get('order')
+        ord_line.order_id = self.kwargs.get('pk')
+        book = Book.objects.get(id=ord_line.book_id)
+        ord_line.ISBN = book.ISBN
+        ord_line.author_name = book.author_name
+        ord_line.title = book.title
+        ord_line.price = book.price
         ord_line.save()
         self.object = ord_line
         return HttpResponseRedirect(self.get_success_url())
+
+
+class OrderLineUpdateView(LoginRequiredMixin, UpdateView):
+    login_url = reverse_lazy('login')
+    model = OrderLine
+    fields = [
+        'quantity',
+    ]
+    success_url = reverse_lazy('order_cart')
+
+
+class OrderLineDeleteView(LoginRequiredMixin, DeleteView):
+    login_url = reverse_lazy('login')
+    model = OrderLine
+    success_url = reverse_lazy('order_cart')
 
 
 class SignUpView(CreateView):

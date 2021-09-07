@@ -1,17 +1,17 @@
 {% extends "./base.html" %}
 
-{% block title %}Comment{% endblock %}
+{% block title %}Order Item{% endblock %}
 
 {% block pageheader %}
-    {% if ps_name %}
-        <h1>New comment on "{{ ps_name }}"</h1>
+    {% if object.title %}
+         <h1>{{ object.title }}</h1>
     {% else %}
-        <h1>New comment</h1>
+         <h1>New item</h1>
     {% endif %}
 {% endblock %}
 {% block content %}
     <div class="block-header">
-        <h3>Enter your name and comment:</h3>
+        <h3>Enter or change all required data:</h3>
     </div>
     <div class="content">
         <form method="post" enctype="multipart/form-data">{% csrf_token %}
@@ -20,6 +20,6 @@
         </form>
     </div>
     <div class="block-header">
-        <a href="{% url 'post_list' %}"> << Back to the list of posts >> </a>
+        <a href="{% url 'order_cart' %}"> << To the cart >> </a>
     </div>
 {% endblock %}

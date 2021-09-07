@@ -5,9 +5,14 @@
 {% block pageheader %}
     <h1>Order#: {{ object.order_num }} Date: {{ object.order_date }} Status: {{ object.status }}</h1>
 {% endblock %}
+
+{% if object.status == 'cart'%}
+{% else %}
+{% endif %}
+
 {% block content %}
     <div class="block-header">
-        <h3>Order details:</h3>
+        <h3>Items:</h3>
     </div>
     <div class="content">
         <ul>
@@ -25,7 +30,7 @@
                 </div>
             </div>
         {% empty %}
-            <li>No lines yet.</li>
+            <li>No items yet.</li>
         {% endfor %}
         </ul>
     </div>

@@ -14,8 +14,11 @@
     {% endif %}
 {% endblock %}
 {% block navcol2 %}
+{% endblock %}
+{% block navcol3 %}
     {% if user.is_authenticated %}
-        <a href="{% url 'order_new' %}" role="button" class="btn btn-default" >Create order</a>
+         <a href="{% url 'logout' %}" role="button" class="btn btn-default" >Logout</a>
+    {% else %}
     {% endif %}
 {% endblock %}
 {% block content %}
@@ -26,6 +29,7 @@
                     <td><b>Title:</b> {{ bk.title }}</td>
                 </tr>
                 <tr>
+                    <td><b>Author:</b> {{ bk.author_name }}</td>
                     <td><b>ISBN:</b> {{ bk.ISBN }}</td>
                     <td><b>Pages:</b> {{ bk.pages }}</td>
                     <td><b>Price:</b> {{ bk.price }}</td>
@@ -33,7 +37,7 @@
                     <td><b>Quantity:</b> {{ bk.quantity }}</td>
                 </tr>
                 <tr>
-                    <td colspan="5" class="divider"><hr/></td>
+                    <td colspan="6" class="divider"><hr/></td>
                 </tr>
             {% empty %}
                 <tr>

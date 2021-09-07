@@ -18,11 +18,7 @@
         <table>
             {% for ord in object_list %}
                 <tr>
-                    {% if ord.status == 'cart'%}
-                        <td><a href="{{ ord.id }}"> Order#: {{ ord.order_num }} Date: {{ ord.order_date }} </a> </td>
-                    {% else %}
-                        <td><b> Order#: {{ ord.order_num }} Date: {{ ord.order_date }} </b> </td>
-                    {% endif %}
+                    <td><a href="{{ ord.id }}"> Order#: {{ ord.order_num }} Date: {{ ord.order_date }} </a> </td>
                     <td><b>Store #:</b> {{ ord.store_num }}</td>
                     <td><b>Store name:</b> {{ ord.store_name }}</td>
                     <td><b>Customer name:</b> {{ ord.customer_name }}</td>

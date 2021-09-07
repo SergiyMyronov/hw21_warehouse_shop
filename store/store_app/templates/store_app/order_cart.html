@@ -1,0 +1,60 @@
+{% extends "./base.html" %}
+
+{% block title %}Cart{% endblock %}
+
+{% block pageheader %}
+    <h1>User cart</h1>
+{% endblock %}
+{% block navcol1 %}
+    <a href="{% url 'book_list' %}" role="button" class="btn btn-default" >To book list</a>
+{% endblock %}
+{% block navcol2 %}
+    {% if user.is_authenticated %}
+         <a href="{% url 'order_list' %}" role="button" class="btn btn-default" >To my orders</a>
+    {% else %}
+         <a href="{% url 'login' %}" role="button" class="btn btn-default" >Login</a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <div class="block-header">
+        <h4>Items:</h4>
+    </div>
+    <div class="block-header">
+        <a href="orderline/new/{{ order_id }}" role="button" class="btn btn-outline-primary btn-sm" >Add item</a>
+    </div>
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <hr style="height:2px;background-color:darkblue;border:none;" />
+            </div>
+        </div>
+        <table>
+            {% for ln in order_lines %}
+                <tr>
+                    <td><a href="orderline/edit/{{ ln.id }}"> "{{ ln.title }}" </a></td>
+                </tr>
+                <tr>
+                    <td><b>Author:</b> {{ ln.author_name }}</td>
+                    <td><b>ISBN:</b> {{ ln.ISBN }}</td>
+                    <td><b>Price:</b> {{ ln.price }}</td>
+                    <td><b>Quantaty:</b> {{ ln.quantity }}</td>
+                    <td><a href="orderline/delete/{{ ln.id }}"> -  Delete item  - </a></td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="divider"><hr/></td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td><b>No items yet.</b></td>
+                </tr>
+            {% endfor %}
+        </table>
+        <div class="container-fluid">
+            <div class="row">
+                <hr style="height:2px;background-color:darkblue;border:none;" />
+            </div>
+        </div>
+        <a href="{% url 'book_list' %}" role="button" class="btn btn-primary" >Proceed to checkout</a>
+    </div>
+{% endblock %}

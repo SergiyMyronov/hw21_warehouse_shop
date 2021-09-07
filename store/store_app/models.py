@@ -34,10 +34,10 @@ class Order(models.Model):
         ('cancelled', 'Cancelled by warehouse'),
     )
 
-    order_num = models.IntegerField(unique=True)
+    order_num = models.IntegerField(default=999999)
     order_date = models.DateField(default=timezone.now)
-    store_num = models.IntegerField()
-    store_name = models.CharField(max_length=100)
+    store_num = models.IntegerField(default=1)
+    store_name = models.CharField(default='Store1', max_length=100)
     customer_name = models.CharField(max_length=200)
     customer_mail = models.EmailField()
     status = models.CharField(max_length=20, choices=STATUS, default='cart')
